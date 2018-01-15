@@ -18,10 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+/*
+ * Must be included first because `malloc` is defined as macro.
+ * => Otherwise break some pieces of code in macro expansion...
+ */
+#include "mem.h"
+
 #include "avstring.h"
 #include "dict.h"
 #include "internal.h"
-#include "mem.h"
 
 AVDictionaryEntry *
 av_dict_get(AVDictionary *m, const char *key, const AVDictionaryEntry *prev, int flags)
