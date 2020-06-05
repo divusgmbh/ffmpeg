@@ -813,9 +813,13 @@ static int dshow_read_header(AVFormatContext *avctx, AVFormatParameters *ap)
         }
     }
 
+#ifdef ENABLE_MICROSOFT_STORE_APP
+    CoInitializeEx(0, COINIT_MULTITHREADED);
+#else
     CoInitialize(0);
+#endif
 
-    r = CoCreateInstance(&CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER,
+    r = CoCreateInstanceBT(&CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER,
                          &IID_IGraphBuilder, (void **) &graph);
     if (r != S_OK) {
         av_log(avctx, AV_LOG_ERROR, "Could not create capture graph.\n");
@@ -823,7 +827,7 @@ static int dshow_read_header(AVFormatContext *avctx, AVFormatParameters *ap)
     }
     ctx->graph = graph;
 
-    r = CoCreateInstance(&CLSID_SystemDeviceEnum, NULL, CLSCTX_INPROC_SERVER,
+    r = CoCreateInstanceBT(&CLSID_SystemDeviceEnum, NULL, CLSCTX_INPROC_SERVER,
                          &IID_ICreateDevEnum, (void **) &devenum);
     if (r != S_OK) {
         av_log(avctx, AV_LOG_ERROR, "Could not enumerate system devices.\n");
